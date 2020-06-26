@@ -11,9 +11,9 @@ void write_tree_to_file(BSTNode* nd, const char* out_file_path) {
 
 // helper to write to file recursively
 void _write_tree(BSTNode* nd) {
+    printf("Printing tree\n");
     if (nd != NULL) {
-        
-        printf("%d %c", nd -> key, type_of_branches(nd));
+        printf("%d %c\n", nd -> key, type_of_branches(nd));
         _write_tree(nd -> left); 
         _write_tree(nd -> right); 
     }

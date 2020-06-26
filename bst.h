@@ -10,11 +10,10 @@ typedef struct bstnode {
     int key; 
     struct bstnode* left; 
     struct bstnode* right;
-    struct bstnode* parent; 
 } BSTNode; 
 
 
-bool create_node(BSTNode* nd, int key, BSTNode* parent); 
+BSTNode* create_node(int key); 
 bool insert(BSTNode* nd, int key); 
 bool delete(BSTNode* nd, int key); 
 /**

@@ -37,16 +37,15 @@ bool build_tree(const char* in_file_path, const char* out_file_path) {
 
     int key; 
     char operation; 
-    BSTNode* nd = NULL;
+    BSTNode* root = NULL;
 
     while (fread(&key, sizeof(key), 1, in_file_ptr) == 1) {
         operation = fgetc(in_file_ptr); 
         printf("key = %d\noperation = %c\n", key, operation);
         switch (operation) {
             case 'i': 
-                printf("inserting new node\n");
-                if (!insert(nd, key)) { 
-                   return cleanup(nd, in_file_ptr, out_file_path, 0); 
+                if (!insert(root, key)) { 
+                   return cleanup(root, in_file_ptr, out_file_path, 0); 
                 }
                 break; 
                      
@@ -54,17 +53,17 @@ bool build_tree(const char* in_file_path, const char* out_file_path) {
                 printf("deleting node\n");
                 /** 
                 if (!delete(nd, key)) { 
-                  return cleanup(nd, in_file_ptr, out_file_path, 0); 
+                  return cleanup(root, in_file_ptr, out_file_path, 0); 
                 }
                 */
                 break; 
             default:
-                return cleanup(nd, in_file_ptr, out_file_path, 0); 
+                return cleanup(root, in_file_ptr, out_file_path, 0); 
         }
         
     }
 
-    return cleanup(nd, in_file_ptr, out_file_path, 1); 
+    return cleanup(root, in_file_ptr, out_file_path, 1); 
 }
 
 /**

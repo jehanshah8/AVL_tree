@@ -6,24 +6,25 @@ int _compare(const void* o1, const void* o2) {
 
 // Creates and inserts a new node and rebalances tree as needed
 bool insert(BSTNode* root, int key) {
+    //printf("inserting new node\n");
     BSTNode* parent = NULL; 
-    BSTNode* nd = root; 
-    while (nd != NULL) {
-        parent = nd; 
-        if (key <= nd -> key) { //less than or equal to so that duplicates always go left 
-            nd = nd -> left; 
+    BSTNode* curr = root; 
+    while (curr != NULL) {
+        parent = curr; 
+        if (key <= curr -> key) { //less than or equal to so that duplicates always go left 
+            curr = curr -> left; 
         }  
         else { 
-            nd = nd -> right; 
+            curr = curr -> right; 
         }
-    } // while ends when an empty slot is found
+    } // while ends when curr points to an empty slot
     
-    // Checks is memory was successfully allocated 
-    if (!create_node(nd, key, parent)) {
+    // Creates new node and checks is memory was successfully allocated 
+    BSTNode* nd = create_node(key); 
+    if (nd == NULL) {
         return false; 
     }
     
-    /** not needed?
     // Points parent to the correct node
     if (parent == NULL) {
         root = nd; 
@@ -36,41 +37,24 @@ bool insert(BSTNode* root, int key) {
             parent -> right = nd;
         } 
     }
-    */
-
+    
     //make_balanced(nd); 
     return true; 
 }
 
-/** Attempting to insert recursively. Trouble with maintaining parent
-// Creates and inserts a new node and rebalances tree as needed
-bool insert(BSTNode* nd, int key) {
-    if (nd == NULL) {
-        if (!create_node(nd, key)) {
-        return false; 
-        }
-    }
-    else if (key <= nd -> key) {
-        insert(nd -> left, key); 
-    } 
-    else {
-        insert(nd -> right, key); 
-    }
-    make_balanced(nd); 
-    return true; 
-}
-*/
-
 // Allocates memeory for a new node and initializes it
-bool create_node(BSTNode* nd, int key, BSTNode* parent) {
-    nd = malloc(sizeof(*nd)); 
+BSTNode* create_node(int key) {
+    BSTNode* nd = malloc(sizeof(*nd)); 
         if (nd == NULL) {
-            return false; 
+            printf("Failed to allocate memory for new node\n"); 
+            return NULL; 
         }
-    *nd = (BSTNode) {.key = key, .left = NULL, .right = NULL, .parent = parent}; 
-    return true; 
+    *nd = (BSTNode) {.key = key, .left = NULL, .right = NULL}; 
+    printf("Node created successfully\n"); 
+    return nd; 
 }
 
+/*
 bool delete(BSTNode* root, int key) {
     BSTNode* nd = root; 
     while (nd -> key != key) { 
@@ -122,6 +106,8 @@ bool delete(BSTNode* root, int key) {
     //make_balanced(nd); 
     return false; 
 }
+*/
+
 /**
 // Operates on the whole tree
 // Takes in the root and checks if any node is unbalanced. 
@@ -158,5 +144,5 @@ void rotate_left(BSTNode* nd) {
     //TODO
     return; 
 }
-
 */
+
