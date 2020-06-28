@@ -19,7 +19,7 @@ BSTNode* create_node(int key) {
 
 // Creates and inserts a new node and rebalances tree as needed
 bool insert(BSTNode** root, int key) {
-    printf("inserting new node\n");
+    //printf("inserting new node\n");
     BSTNode* parent_ya = NULL;
     BSTNode* parent_curr = NULL;  
     BSTNode* curr = *root; 
@@ -61,16 +61,11 @@ bool insert(BSTNode** root, int key) {
         } 
     }
     
-    printf("reached balancing stage\n");
+    //printf("reached balancing stage\n");
     // Keeps track of balance preemptively?? 
     curr = youngest_ancestor;
-    // testing
-    if (curr == NULL) {
-        printf("curr = NULL\n");
-    }
-    //end testing 
-    while (curr != nd) { //remove && curr != NULL
-        if (key <= curr -> key) { //correct <= vs <
+    while (curr != nd) { 
+        if (key <= curr -> key) { 
             printf("if\n");
             curr -> balance += 1; 
             curr = curr -> left;   
@@ -81,13 +76,13 @@ bool insert(BSTNode** root, int key) {
         }
     }
 
-    printf("evaluating if balacing is required\n");
+    //printf("evaluating if balacing is required\n");
     // If it's already balanced, return
     if (youngest_ancestor -> balance < 2 && youngest_ancestor -> balance > -2) { 
         return true; 
     }
 
-    printf("needs balancing\n");
+    //printf("needs balancing\n");
     BSTNode* child; // which child nd is inserted into
     // Make child point to the tallest child of ya, which was made talled by adding node
     if (key <= youngest_ancestor -> key) {
