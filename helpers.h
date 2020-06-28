@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include "bst.h"
 
+void print_tree(BSTNode* nd);
 void write_tree_to_file(BSTNode* nd, const char* out_file_path);
 void _write_tree(BSTNode* nd);
 bool cleanup (BSTNode* nd, FILE* in_file_ptr, const char* out_file_path, int print_code); 

@@ -10,12 +10,13 @@ typedef struct bstnode {
     int key; 
     struct bstnode* left; 
     struct bstnode* right;
+    int balance;
 } BSTNode; 
 
 
 BSTNode* create_node(int key); 
-bool insert(BSTNode* nd, int key); 
-bool delete(BSTNode* nd, int key); 
+bool insert(BSTNode** root, int key); 
+bool delete(BSTNode* root, int key); 
 /**
 void make_balanced (BSTNode* nd); 
 bool is_balanced(BSTNode* nd); 

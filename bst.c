@@ -1,21 +1,23 @@
 #include "bst.h"
+#include "helpers.h"
 
 int _compare(const void* o1, const void* o2) {
     return *(const int *)o1 - *(const int *)o2;  
 }
 
 // Creates and inserts a new node and rebalances tree as needed
-bool insert(BSTNode* root, int key) {
+bool insert(BSTNode** root, int key) {
     //printf("inserting new node\n");
     BSTNode* parent = NULL; 
-    BSTNode* curr = root; 
+    BSTNode* curr = *root; 
     while (curr != NULL) {
         parent = curr; 
+        //printf("root = %d, parent = %d, curr = %d\n", (*root) -> key, parent -> key, curr -> key);
         if (key <= curr -> key) { //less than or equal to so that duplicates always go left 
-            curr = curr -> left; 
+            curr = curr -> left; //point left
         }  
         else { 
-            curr = curr -> right; 
+            curr = curr -> right; //point right
         }
     } // while ends when curr points to an empty slot
     
@@ -27,7 +29,7 @@ bool insert(BSTNode* root, int key) {
     
     // Points parent to the correct node
     if (parent == NULL) {
-        root = nd; 
+        *root = nd; 
     } 
     else {
         if (nd -> key <= parent -> key) {
@@ -49,8 +51,8 @@ BSTNode* create_node(int key) {
             printf("Failed to allocate memory for new node\n"); 
             return NULL; 
         }
-    *nd = (BSTNode) {.key = key, .left = NULL, .right = NULL}; 
-    printf("Node created successfully\n"); 
+    *nd = (BSTNode) {.key = key, .left = NULL, .right = NULL, .balance = 0}; 
+    //printf("Node created successfully\n"); 
     return nd; 
 }
 

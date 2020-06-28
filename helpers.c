@@ -1,5 +1,14 @@
 #include "helpers.h"
 
+// Pre-order printing
+void print_tree(BSTNode* nd) {
+    if (nd != NULL) {
+        printf("%d %c\n", nd -> key, type_of_branches(nd));
+        print_tree(nd -> left); 
+        print_tree(nd -> right); 
+    }
+}
+
 // Pre-order write to file
 void write_tree_to_file(BSTNode* nd, const char* out_file_path) {
     FILE* out_file_ptr = fopen(out_file_path, "wb"); 
@@ -13,14 +22,15 @@ void write_tree_to_file(BSTNode* nd, const char* out_file_path) {
 void _write_tree(BSTNode* nd) {
     printf("Printing tree\n");
     if (nd != NULL) {
-        printf("%d %c\n", nd -> key, type_of_branches(nd));
+        /**TODO**/ //wirte to file here //////////////////////
         _write_tree(nd -> left); 
         _write_tree(nd -> right); 
     }
 }
 
-bool cleanup (BSTNode* nd, FILE* in_file_ptr, const char* out_file_path, int print_code) { 
-    write_tree_to_file(nd, out_file_path); 
+bool cleanup (BSTNode* nd, FILE* in_file_ptr, const char* out_file_path, int print_code) {  
+    //write_tree_to_file(nd, out_file_path); ///////////////////uncomment this line
+    print_tree(nd); 
     fclose(in_file_ptr); 
     printf("%d\n", 1); 
     return print_code == 1; 

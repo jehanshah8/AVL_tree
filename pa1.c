@@ -41,10 +41,10 @@ bool build_tree(const char* in_file_path, const char* out_file_path) {
 
     while (fread(&key, sizeof(key), 1, in_file_ptr) == 1) {
         operation = fgetc(in_file_ptr); 
-        printf("key = %d\noperation = %c\n", key, operation);
+        //printf("key = %d\noperation = %c\n", key, operation);
         switch (operation) {
             case 'i': 
-                if (!insert(root, key)) { 
+                if (!insert(&root, key)) { 
                    return cleanup(root, in_file_ptr, out_file_path, 0); 
                 }
                 break; 
