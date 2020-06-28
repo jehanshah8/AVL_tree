@@ -22,7 +22,8 @@ void make_balanced (BSTNode* nd);
 bool is_balanced(BSTNode* nd); 
 int calc_balance(BSTNode* nd); 
 int calc_height(BSTNode* nd); 
-void rotate_right(BSTNode* nd); 
-void rotate_left(BSTNode* nd); 
 */
+void right_rotate(BSTNode** nd); 
+void left_rotate(BSTNode** nd); 
+
 #endif // BST_H
