@@ -83,6 +83,65 @@ bool insert(BSTNode** root, int key) {
     }
 
     //printf("needs balancing\n");
+    make_balanced (root, key, curr, youngest_ancestor, parent_ya);
+    return true; 
+}
+
+/*
+bool delete(BSTNode* root, int key) {
+    BSTNode* nd = root; 
+    while (nd -> key != key) { 
+        // key not found
+        if (nd == NULL) { 
+            return true; 
+        }
+
+        if (key <= nd -> key) { //less than or equal to so that duplicates always go left 
+            nd = nd -> left; 
+        }  
+        else { 
+            nd = nd -> right; 
+        }
+    } // while key is not found or node is not NULL
+
+    // both children
+    if (nd -> left != NULL && nd -> right != NULL) { 
+         BSTNode* temp = nd -> left; 
+        // find immidiate predecessor by going left once and then keep going right
+        while (temp -> right != NULL) {    
+            temp = temp -> right; 
+        } // while the predecessor isn't found
+
+        nd = temp; // is this okay or do all parameters need to be copied manually? 
+        delete(temp, (temp -> key)); 
+    }
+    // only left child
+    else if (nd -> left != NULL) {
+        //link parent of current node to its left child
+        nd -> parent -> left = nd -> left; 
+        //link the parent of node's left child to node's parent
+        nd -> left -> parent = nd -> parent; 
+        free(nd); 
+    }
+    // only right child
+    else if (nd -> right != NULL) { 
+        //link parent of current node to its right child
+        nd -> parent -> right = nd -> right; 
+        //link parent of current node to its right child
+        nd -> right -> parent = nd -> parent; 
+        free(nd); 
+    } 
+    // no children 
+    else {
+        free(nd);
+    }
+    
+    //make_balanced(nd); 
+    return false; 
+}
+*/
+
+void make_balanced (BSTNode** root, int key, BSTNode* curr, BSTNode* youngest_ancestor, BSTNode* parent_ya) {
     BSTNode* child; // which child nd is inserted into
     // Make child point to the tallest child of ya, which was made talled by adding node
     if (key <= youngest_ancestor -> key) {
@@ -173,73 +232,9 @@ bool insert(BSTNode** root, int key) {
             parent_ya -> right = curr; 
         }
     }
-
-    return true; 
 }
-
-/*
-bool delete(BSTNode* root, int key) {
-    BSTNode* nd = root; 
-    while (nd -> key != key) { 
-        // key not found
-        if (nd == NULL) { 
-            return true; 
-        }
-
-        if (key <= nd -> key) { //less than or equal to so that duplicates always go left 
-            nd = nd -> left; 
-        }  
-        else { 
-            nd = nd -> right; 
-        }
-    } // while key is not found or node is not NULL
-
-    // both children
-    if (nd -> left != NULL && nd -> right != NULL) { 
-         BSTNode* temp = nd -> left; 
-        // find immidiate predecessor by going left once and then keep going right
-        while (temp -> right != NULL) {    
-            temp = temp -> right; 
-        } // while the predecessor isn't found
-
-        nd = temp; // is this okay or do all parameters need to be copied manually? 
-        delete(temp, (temp -> key)); 
-    }
-    // only left child
-    else if (nd -> left != NULL) {
-        //link parent of current node to its left child
-        nd -> parent -> left = nd -> left; 
-        //link the parent of node's left child to node's parent
-        nd -> left -> parent = nd -> parent; 
-        free(nd); 
-    }
-    // only right child
-    else if (nd -> right != NULL) { 
-        //link parent of current node to its right child
-        nd -> parent -> right = nd -> right; 
-        //link parent of current node to its right child
-        nd -> right -> parent = nd -> parent; 
-        free(nd); 
-    } 
-    // no children 
-    else {
-        free(nd);
-    }
-    
-    //make_balanced(nd); 
-    return false; 
-}
-*/
 
 /**
-// Operates on the whole tree
-// Takes in the root and checks if any node is unbalanced. 
-// If it is unbalanced, it rotates as needed and repeats the checking and correcting process
-void make_balanced (BSTNode* root) {
-    //TODO
-    return; 
-}
-
 // Operates on the whole tree
 // Tells if the whole tree is balanced or not
 bool is_balanced(BSTNode* nd) {
