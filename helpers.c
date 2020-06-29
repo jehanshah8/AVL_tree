@@ -77,13 +77,12 @@ bool recreate_tree(BSTNode** root, FILE* in_file_ptr) {
                 break; 
             case 2: //left 
                 //printf("branch_code case: %d\n", branch_code);
-                (*root) -> balance += 1;
                 recreate_tree(&((*root) -> left), in_file_ptr); 
                 break;
             case 1: //right
                 //printf("branch_code case: %d\n", branch_code);
                 recreate_tree(&((*root) -> right), in_file_ptr); 
-                (*root) -> balance -= 1;
+                
                 break;
             case 0: 
                 //printf("branch_code case: %d\n", branch_code);
@@ -93,70 +92,96 @@ bool recreate_tree(BSTNode** root, FILE* in_file_ptr) {
                 // incorrect format
                 return false;
         }
-
+        attribute_balance(*root);
     return true;
 }
 
-int is_bst(BSTNode* nd, int prev_key, int output_code) {
+void attribute_balance(BSTNode* root) {
+    if (root == NULL) {
+        return;
+    }
+
+    if (root -> left != NULL) {     
+         root -> left -> balance = calc_balance(root -> left);  
+    }  
+    
+    if (root -> right != NULL) {     
+        root -> right -> balance = calc_balance(root -> right); 
+    }
+    
+    root -> balance = calc_balance(root);
+}
+
+int calc_balance(BSTNode* nd) {
+    if (nd == NULL) {
+        return 0; 
+    }
+
+    return calc_height(nd -> left) - calc_height(nd -> right); 
+}
+
+int calc_height(BSTNode* nd) {
+    if (nd == NULL) {
+        return - 1; 
+    }
+
+    int left_height = 0; 
+    int right_height = 0; 
+    if (nd -> left != NULL) {     
+        left_height = calc_height(nd -> left) + 1; 
+    } 
+
+    if (nd -> right != NULL) {     
+        right_height = calc_height(nd -> right) + 1; 
+    } 
+    
+    if (left_height >= right_height) {
+        //printf("key = %d, left height = %d\n", nd -> key, left_height);
+        return left_height; 
+    } 
+    else
+    {
+        //printf("key = %d, right height = %d\n", nd -> key, right_height);
+        return right_height; 
+    }
+}
+
+int is_bst(BSTNode* nd, int output_code) {
     if (nd == NULL) {
         return output_code; 
     }
-    printf("in is_bst, key = %d, prev_key = %d output_code = %d\n", nd -> key, prev_key, output_code); 
-    output_code = is_bst(nd -> left, nd -> key, output_code);
-    if (nd -> key < prev_key) {
-        // not bst
-        printf("in is_bst, key = %d, prev_key = %d\n", nd -> key, prev_key); 
-        printf("not a bst\n");
-        return 00; 
-    }
-    /**
-    if (nd -> balance >= 2 || nd -> balance <= -2) {
-        output_code = 10; 
-    }
-    */
-    output_code = is_bst(nd -> right, nd -> key, output_code);
-    return output_code; 
-}
 
-/**
-BSTNode* next = nd -> left; 
-        BSTNode* curr = nd;
-    BSTNode* prev = NULL;  
-    while (next != NULL)
-    {   
-        prev = curr; 
-        curr = next; 
-        next = next -> left; 
-        // Breaks rule of BST, left must be smalled than parent
-        if (curr -> key > prev -> key) {
+    if (output_code == 00) {
+        return output_code; 
+    } 
+    
+    if (nd -> left != NULL) { 
+        if (nd -> key < nd -> left -> key) {
             // not bst
-            printf("%d,%d,%d\n", 1, 0, 0);
-            return; 
+            printf("key = %d, left -> key = %d\n", nd -> key, nd -> left -> key);
+            return 00;
+        }
+        else {
+            output_code = is_bst(nd -> left, output_code);
+        }
+    }
+
+    if (nd -> right != NULL) {
+        if (nd -> key >= nd -> right -> key) {
+            // not bst 
+            printf("key = %d, right -> key = %d\n", nd -> key, nd -> right -> key);
+            return 00;
+        }
+        else {
+            output_code = is_bst(nd -> right, output_code);
         }
     }
     
-    next = curr -> right;
-    is_bst(BSTNode* nd) 
-    while (next != NULL) { 
-        prev = curr; 
-        curr = next; 
-        next = curr -> left; 
-        // Breaks rule of BST, right must be bigger than parent
-        if (next -> key > curr -> key) {
-            
-            return; 
-        }
+    if (nd -> balance >= 2 || nd -> balance <= -2) {
+        output_code = 10; 
     }
-
-
-
-
-        is(nd -> left); 
-        printf("%d %c\n", nd -> key, type_of_branches(nd));
-        is(nd -> right); 
-    return 
-
-*/
-
+    
+    return output_code; 
+}
 
 

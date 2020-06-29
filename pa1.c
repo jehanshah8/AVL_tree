@@ -93,7 +93,7 @@ bool evaluate_tree (const char* in_file_path) {
         return true; 
     }
 
-    int output_code = is_bst(root, root -> key, 11);
+    int output_code = is_bst(root, 11);
     switch (output_code) {
         case 11: 
             // BST and is balanced 
