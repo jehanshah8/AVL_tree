@@ -55,7 +55,6 @@ bool insert(BSTNode** root, int key) {
     curr = youngest_ancestor;
     while (curr != nd) { 
         if (key <= curr -> key) { 
-            printf("if\n");
             curr -> balance += 1; 
             curr = curr -> left;   
         }
@@ -89,12 +88,14 @@ BSTNode* create_node(int key) {
 }
 
 bool delete(BSTNode** root, int key) {
+    //printf("deleting node\n");
+
     if (*root == NULL) { 
             return true; 
     }
-    //print_tree(*root);
-    //printf("deleting node\n");
 
+    print_tree(*root);
+    
     //BSTNode* parent_ya = NULL;
     BSTNode* parent_curr = NULL;
     //BSTNode* youngest_ancestor = *root;   
@@ -118,19 +119,49 @@ bool delete(BSTNode** root, int key) {
         // If there is something there, move everything down one step
         else {
             //printf("nd -> key = %d\n", nd -> key);
+            /**
+            // If the balance of nd is non-zero, then when you remove something from nd, it may become unbalanced
+            if (nd -> balance != 0) {
+                parent_ya = curr; 
+                youngest_ancestor = nd;  
+            }
+            */
             parent_curr = curr; 
-            curr = nd;
-            //parent_ya = curr; 
-            //youngest_ancestor = nd;  
+            curr = nd;  
         }
     } // while curr isn't at the target key or nd is not NULL
 
     //printf("key = %d found\n", key);
     // Target key found. Curr is at target. Detach node cases
     detach_node(curr, parent_curr, key);
-    
+
+    /**
+    //printf("reached balancing stage\n");
+    // Keeps track of balance preemptively?? 
+    if (youngest_ancestor == NULL) { 
+        return true; 
+    } 
+
+    curr = youngest_ancestor;
+    while (curr ->) { 
+        if (key <= curr -> key) { 
+            curr -> balance += 1; 
+            curr = curr -> left;   
+        }
+        else {
+            curr -> balance -= 1; 
+            curr = curr -> right; 
+        }
+    }
+    //printf("evaluating if balacing is required\n");
+    // If it's already balanced, return
+    if (youngest_ancestor -> balance < 2 && youngest_ancestor -> balance > -2) { 
+        return true; 
+    }
+
     //printf("needs balancing\n");
-    //make_balanced (root, key, curr, youngest_ancestor, parent_ya);
+    make_balanced (root, key, curr, youngest_ancestor, parent_ya);
+    */
     return true; 
 }
 
