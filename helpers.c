@@ -31,6 +31,7 @@ void _write_tree(BSTNode* nd) {
 bool cleanup (BSTNode* nd, FILE* in_file_ptr, const char* out_file_path, int print_code) {  
     //write_tree_to_file(nd, out_file_path); ///////////////////uncomment this line
     print_tree(nd); 
+    destroy_tree(nd);
     fclose(in_file_ptr); 
     printf("%d\n", 1); 
     return print_code == 1; 

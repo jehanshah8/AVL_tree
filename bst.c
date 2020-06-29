@@ -92,7 +92,7 @@ bool delete(BSTNode** root, int key) {
     if (*root == NULL) { 
             return true; 
     }
-    print_tree(*root);
+    //print_tree(*root);
     //printf("deleting node\n");
 
     //BSTNode* parent_ya = NULL;
@@ -112,12 +112,12 @@ bool delete(BSTNode** root, int key) {
 
         // key not found
         if (nd == NULL) { 
-            printf("key not found\n");
+            //printf("key not found\n");
             return true; 
         } 
         // If there is something there, move everything down one step
         else {
-            printf("nd -> key = %d\n", nd -> key);
+            //printf("nd -> key = %d\n", nd -> key);
             parent_curr = curr; 
             curr = nd;
             //parent_ya = curr; 
@@ -125,7 +125,7 @@ bool delete(BSTNode** root, int key) {
         }
     } // while curr isn't at the target key or nd is not NULL
 
-    printf("key = %d found\n", key);
+    //printf("key = %d found\n", key);
     // Target key found. Curr is at target. Detach node cases
     detach_node(curr, parent_curr, key);
     
@@ -323,4 +323,13 @@ void left_rotate(BSTNode** nd) {
     ((*nd) -> left) -> right = temp;
 }
 
+void destroy_tree(BSTNode* root) {
+    if (root == NULL) {
+        return;
+    }
 
+    destroy_tree(root -> left); 
+    destroy_tree(root -> right);
+    *root = (BSTNode) {.key = 0, .left = NULL, .right = NULL, .balance = 0}; 
+    free(root);
+} 

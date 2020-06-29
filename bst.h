@@ -27,5 +27,6 @@ void copy(BSTNode* target, BSTNode* source);
 void make_balanced (BSTNode** root, int key, BSTNode* curr, BSTNode* youngest_ancestor, BSTNode* parent_ya);
 void right_rotate(BSTNode** nd); 
 void left_rotate(BSTNode** nd); 
+void destroy_tree(BSTNode* root); 
 
 #endif // BST_H
