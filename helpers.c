@@ -167,7 +167,7 @@ int is_bst(BSTNode* nd, int output_code) {
     }
 
     if (nd -> right != NULL) {
-        if (nd -> key >= nd -> right -> key) {
+        if (nd -> key > nd -> right -> key) {
             // not bst 
             printf("key = %d, right -> key = %d\n", nd -> key, nd -> right -> key);
             return 00;
@@ -177,11 +177,38 @@ int is_bst(BSTNode* nd, int output_code) {
         }
     }
     
-    if (nd -> balance >= 2 || nd -> balance <= -2) {
-        output_code = 10; 
-    }
-    
     return output_code; 
 }
 
+int is_balanced(BSTNode* nd, int output_code) {
+    if (nd == NULL) {
+        return output_code; 
+    }
 
+    if (output_code == 0) {
+        return output_code; 
+    } 
+    
+    if (nd -> left != NULL) { 
+        if (nd -> balance >= 2 || nd -> balance <= -2) {
+            // Not balanced
+            printf("key = %d\n", nd -> key);
+            return 0;
+        }
+        else {
+            output_code = is_balanced(nd -> left, output_code);
+        }
+    }
+
+    if (nd -> right != NULL) {
+        if (nd -> balance >= 2 || nd -> balance <= -2) {
+            // Not balanced
+            printf("key = %d\n", nd -> key);
+            return 0;
+        }
+        else {
+            output_code = is_balanced(nd -> right, output_code);
+        }
+    }
+    return output_code; 
+}

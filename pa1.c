@@ -93,7 +93,9 @@ bool evaluate_tree (const char* in_file_path) {
         return true; 
     }
 
-    int output_code = is_bst(root, 11);
+    int output_code = is_bst(root, 10);
+    output_code += is_balanced(root, 1);
+
     switch (output_code) {
         case 11: 
             // BST and is balanced 
@@ -103,8 +105,13 @@ bool evaluate_tree (const char* in_file_path) {
             // BST but NOT balanced
             printf("%d,%d,%d\n", 1, 1, 0);
             break;
+
+        case 01: 
+            // Not BST but is balanced
+            printf("%d,%d,%d\n", 1, 0, 1);
+            break;
         case 00: 
-            // Not BST
+            // Not BST and not balanced
             printf("%d,%d,%d\n", 1, 0, 0);
             break;
     }

@@ -15,4 +15,5 @@ void attribute_balance(BSTNode* root);
 int calc_balance(BSTNode* nd); 
 int calc_height(BSTNode* nd); 
 int is_bst(BSTNode* nd, int output_code);
+int is_balanced(BSTNode* nd, int output_code);
 #endif // HELPERS_H
