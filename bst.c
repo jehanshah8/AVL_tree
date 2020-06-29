@@ -5,26 +5,15 @@ int _compare(const void* o1, const void* o2) {
     return *(const int *)o1 - *(const int *)o2;  
 }
 
-// Allocates memeory for a new node and initializes it
-BSTNode* create_node(int key) {
-    BSTNode* nd = malloc(sizeof(*nd)); 
-        if (nd == NULL) {
-            printf("MEMORY ERROR: Failed to allocate memory for new node\n"); 
-            return NULL; 
-        }
-    *nd = (BSTNode) {.key = key, .left = NULL, .right = NULL, .balance = 0}; 
-    //printf("Node created successfully\n"); 
-    return nd; 
-}
-
 // Creates and inserts a new node and rebalances tree as needed
 bool insert(BSTNode** root, int key) {
     //printf("inserting new node\n");
     BSTNode* parent_ya = NULL;
     BSTNode* parent_curr = NULL;  
-    BSTNode* curr = *root; 
     BSTNode* youngest_ancestor = *root; 
+    BSTNode* curr = *root; 
     BSTNode* nd = NULL;
+
     while (curr != NULL) {
         if (key <= curr -> key) { //less than or equal to so that duplicates always go left 
             nd = curr -> left; //point left
@@ -87,59 +76,125 @@ bool insert(BSTNode** root, int key) {
     return true; 
 }
 
-/*
-bool delete(BSTNode* root, int key) {
-    BSTNode* nd = root; 
-    while (nd -> key != key) { 
-        // key not found
-        if (nd == NULL) { 
-            return true; 
+// Allocates memeory for a new node and initializes it
+BSTNode* create_node(int key) {
+    BSTNode* nd = malloc(sizeof(*nd)); 
+        if (nd == NULL) {
+            printf("MEMORY ERROR: Failed to allocate memory for new node\n"); 
+            return NULL; 
         }
+    *nd = (BSTNode) {.key = key, .left = NULL, .right = NULL, .balance = 0}; 
+    //printf("Node created successfully\n"); 
+    return nd; 
+}
 
-        if (key <= nd -> key) { //less than or equal to so that duplicates always go left 
-            nd = nd -> left; 
+bool delete(BSTNode** root, int key) {
+    if (*root == NULL) { 
+            return true; 
+    }
+    print_tree(*root);
+    //printf("deleting node\n");
+
+    //BSTNode* parent_ya = NULL;
+    BSTNode* parent_curr = NULL;
+    //BSTNode* youngest_ancestor = *root;   
+    BSTNode* curr = *root; 
+    BSTNode* nd = NULL;
+    
+    while (curr -> key != key) { 
+        
+        if (key <= curr -> key) { //less than or equal to so that duplicates always go left 
+            nd = curr -> left; //point left
         }  
         else { 
-            nd = nd -> right; 
+            nd = curr -> right; //point right
         }
-    } // while key is not found or node is not NULL
 
+        // key not found
+        if (nd == NULL) { 
+            printf("key not found\n");
+            return true; 
+        } 
+        // If there is something there, move everything down one step
+        else {
+            printf("nd -> key = %d\n", nd -> key);
+            parent_curr = curr; 
+            curr = nd;
+            //parent_ya = curr; 
+            //youngest_ancestor = nd;  
+        }
+    } // while curr isn't at the target key or nd is not NULL
+
+    printf("key = %d found\n", key);
+    // Target key found. Curr is at target. Detach node cases
+    detach_node(curr, parent_curr, key);
+    
+    //printf("needs balancing\n");
+    //make_balanced (root, key, curr, youngest_ancestor, parent_ya);
+    return true; 
+}
+
+void detach_node(BSTNode* curr, BSTNode* parent_curr, int key) {
+       // no children 
+    if (curr -> left == NULL && curr -> right == NULL) {
+        //printf("target node has no children\n");
+        if (parent_curr != NULL) {
+            if (parent_curr -> left == curr) {
+                parent_curr -> left = NULL;
+            }
+            else {
+                parent_curr -> right = NULL;
+            }
+        }
+        free(curr); 
+    }
     // both children
-    if (nd -> left != NULL && nd -> right != NULL) { 
-         BSTNode* temp = nd -> left; 
+    else if (curr -> left != NULL && curr -> right != NULL) { 
+        //printf("target node has 2 children\n");
+         BSTNode* temp = curr -> left; 
+         BSTNode* parent_temp = curr; 
         // find immidiate predecessor by going left once and then keep going right
-        while (temp -> right != NULL) {    
+        while (temp -> right != NULL) {
+            parent_temp = temp;     
             temp = temp -> right; 
         } // while the predecessor isn't found
 
-        nd = temp; // is this okay or do all parameters need to be copied manually? 
-        delete(temp, (temp -> key)); 
+        copy(curr, temp);
+        detach_node(temp, parent_temp, (temp -> key)); //needs recursice call because it could also have 2, 1, or no children
     }
     // only left child
-    else if (nd -> left != NULL) {
+    else if (curr -> left != NULL) {
+        //printf("target node has only left child\n");
         //link parent of current node to its left child
-        nd -> parent -> left = nd -> left; 
-        //link the parent of node's left child to node's parent
-        nd -> left -> parent = nd -> parent; 
-        free(nd); 
+        if (parent_curr -> left == curr) {
+            parent_curr -> left = curr -> left; 
+        }
+        else {
+            parent_curr -> right = curr -> left;
+        }
+        //Need to readjust balance of parent_curr
+        *curr = (BSTNode) {.key = key, .left = NULL, .right = NULL, .balance = 0}; 
+        free(curr); 
     }
     // only right child
-    else if (nd -> right != NULL) { 
+    else if (curr -> right != NULL) { 
+        //printf("target node has only right child\n");
         //link parent of current node to its right child
-        nd -> parent -> right = nd -> right; 
-        //link parent of current node to its right child
-        nd -> right -> parent = nd -> parent; 
-        free(nd); 
+        if (parent_curr -> left == curr) {
+            parent_curr -> left = curr -> right;
+        }
+        else {
+            parent_curr -> right = curr -> right;
+        }
+        //Need to readjust balance of parent_curr
+        *curr = (BSTNode) {.key = key, .left = NULL, .right = NULL, .balance = 0}; 
+        free(curr); 
     } 
-    // no children 
-    else {
-        free(nd);
-    }
-    
-    //make_balanced(nd); 
-    return false; 
 }
-*/
+
+void copy(BSTNode* target, BSTNode* source) {
+    target -> key = source -> key; 
+}
 
 void make_balanced (BSTNode** root, int key, BSTNode* curr, BSTNode* youngest_ancestor, BSTNode* parent_ya) {
     BSTNode* child; // which child nd is inserted into

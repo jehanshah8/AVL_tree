@@ -50,19 +50,16 @@ bool build_tree(const char* in_file_path, const char* out_file_path) {
                 break; 
                      
             case 'd': 
-                printf("deleting node\n");
-                /** 
-                if (!delete(nd, key)) { 
+                if (!delete(&root, key)) { 
                   return cleanup(root, in_file_ptr, out_file_path, 0); 
                 }
-                */
                 break; 
             default:
                 return cleanup(root, in_file_ptr, out_file_path, 0); 
         }
         
     }
-
+    printf("final output:\n");
     return cleanup(root, in_file_ptr, out_file_path, 1); 
 }
 
