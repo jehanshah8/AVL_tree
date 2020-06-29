@@ -3,7 +3,7 @@
 #include <string.h>
 
 bool build_tree(const char* in_file_path, const char* out_file_path);
-
+bool evaluate_tree (const char* in_file_path); 
 int main (int argc, char** argv) {
 
     if (argc == 4 && strcmp(argv[1], "-b") == 0) {
@@ -11,11 +11,10 @@ int main (int argc, char** argv) {
             return EXIT_FAILURE; 
         } 
     }
-    else if (argc == 3 && strcmp(argv[1], "-e") == 0) {
-        return 0; 
-        //if (!evaluate_tree (argv[2])) {
-          //  return EXIT_FAILURE; 
-        //} 
+    else if (argc == 3 && strcmp(argv[1], "-e") == 0) { 
+        if (!evaluate_tree (argv[2])) {
+            return EXIT_FAILURE; 
+        } 
     }
     else {
         return EXIT_FAILURE; 
@@ -45,78 +44,69 @@ bool build_tree(const char* in_file_path, const char* out_file_path) {
         switch (operation) {
             case 'i': 
                 if (!insert(&root, key)) { 
-                   return cleanup(root, in_file_ptr, out_file_path, 0); 
+                   return cleanup_b(root, in_file_ptr, out_file_path, 0); 
                 }
                 break; 
                      
             case 'd': 
                 if (!delete(&root, key)) { 
-                  return cleanup(root, in_file_ptr, out_file_path, 0); 
+                  return cleanup_b(root, in_file_ptr, out_file_path, 0); 
                 }
                 break; 
             default:
-                return cleanup(root, in_file_ptr, out_file_path, 0); 
+                return cleanup_b(root, in_file_ptr, out_file_path, 0); 
         }
-        
+        //print_tree(root);
     }
     printf("final output:\n");
-    return cleanup(root, in_file_ptr, out_file_path, 1); 
+    return cleanup_b(root, in_file_ptr, out_file_path, 1); 
 }
 
-/**
+
 // option "-e"
 bool evaluate_tree (const char* in_file_path) {
-    
-    * input file should have the following format:
-    * int key char pattern
-    * '1' -> has right child
-    * '2' -> has left child
-    * '3' -> has both children
-    
-
     FILE* in_file_ptr = NULL; 
     in_file_ptr = fopen(in_file_path, "rb"); 
 
-    // cannot open
+    // Check if file was opened successfully
     if (in_file_ptr == NULL) {
         printf("%d,%d,%d\n", -1, 0, 0);
-        return EXIT_FAILURE;
+        return false;
     }
-    // can open but wrong format
-    //loop fread 
-        if (!is_valid_node()) {
-        printf("%d,%d,%d\n", 0, 0, 0);
+
+    // Recursively create tree from example file
+    //printf("trying to recreate tree\n");
+    BSTNode* root = NULL;
+    if (!recreate_tree(&root, in_file_ptr)) {
         fclose(in_file_ptr);
-        return EXIT_FAILURE;
-        }
-        // can open and correct format 
-        else {
-            // is bst
-            if (is_bst()) {
-                //is balanced 
-                if (is_balanced()) {
-                printf("%d,%d,%d\n", 1, 1, 1);
-                fclose(in_file_ptr);
-                return EXIT_SUCCESS;
-                } 
-                // bst but not balanced
-                else {
-                printf("%d,%d,%d\n", 1, 1, 0);
-                fclose(in_file_ptr);
-                return EXIT_SUCCESS;
-                }
-            } 
-            // not bst
-            else {
-            printf("%d,%d,%d\n", 1, 0, 0);
-            fclose(in_file_ptr);
-            return EXIT_SUCCESS;
-            }
-        }
+        destroy_tree(root);
+        printf("%d,%d,%d\n", 0, 0, 0);
+        return false;
+    } 
+    fclose(in_file_ptr);
+    print_tree(root); 
+    // Check if the tree created is a BST and if it is balanced.
     
-}
+    if (root == NULL) {
+        // Empty tree. What to print???????
+        printf("%d,%d,%d\n", 1, 1, 1);
+        return true; 
+    }
 
-bool is_bst() {
-
+    int output_code = is_bst(root, root -> key, 11);
+    switch (output_code) {
+        case 11: 
+            // BST and is balanced 
+            printf("%d,%d,%d\n", 1, 1, 1);
+            break;
+        case 10: 
+            // BST but NOT balanced
+            printf("%d,%d,%d\n", 1, 1, 0);
+            break;
+        case 00: 
+            // Not BST
+            printf("%d,%d,%d\n", 1, 0, 0);
+            break;
+    }
+    return true; 
 }
-*/
