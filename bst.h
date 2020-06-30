@@ -22,6 +22,7 @@ void copy(BSTNode* target, BSTNode* source);
 void make_balanced (BSTNode** root, int key, BSTNode* curr, BSTNode* youngest_ancestor, BSTNode* parent_ya);
 void right_rotate(BSTNode** nd); 
 void left_rotate(BSTNode** nd);
+void attribute_balance(BSTNode* root); 
 int calc_balance(BSTNode* nd); 
 int calc_height(BSTNode* nd); 
 int is_bst(BSTNode* nd, int output_code);

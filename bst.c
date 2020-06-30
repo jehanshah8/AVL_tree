@@ -334,6 +334,22 @@ void left_rotate(BSTNode** nd) {
     ((*nd) -> left) -> right = temp;
 }
 
+void attribute_balance(BSTNode* root) {
+    if (root == NULL) {
+        return;
+    }
+
+    if (root -> left != NULL) {     
+         root -> left -> balance = calc_balance(root -> left);  
+    }  
+    
+    if (root -> right != NULL) {     
+        root -> right -> balance = calc_balance(root -> right); 
+    }
+    
+    root -> balance = calc_balance(root);
+}
+
 // Calculates the balance of any given node
 int calc_balance(BSTNode* nd) {
     if (nd == NULL) {

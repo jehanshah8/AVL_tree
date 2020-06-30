@@ -91,19 +91,5 @@ bool recreate_tree(BSTNode** root, FILE* in_file_ptr) {
     return true;
 }
 
-void attribute_balance(BSTNode* root) {
-    if (root == NULL) {
-        return;
-    }
 
-    if (root -> left != NULL) {     
-         root -> left -> balance = calc_balance(root -> left);  
-    }  
-    
-    if (root -> right != NULL) {     
-        root -> right -> balance = calc_balance(root -> right); 
-    }
-    
-    root -> balance = calc_balance(root);
-}
 
