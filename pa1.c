@@ -89,6 +89,7 @@ bool evaluate_tree (const char* in_file_path) {
     //print_tree(root); 
     
     if (root == NULL) {
+        //PeerReview:
         // Empty tree. What to print???????
         printf("%d,%d,%d\n", 1, 1, 1);
         return true; 

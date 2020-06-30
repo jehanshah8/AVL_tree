@@ -87,6 +87,7 @@ BSTNode* create_node(int key) {
     return nd; 
 }
 
+//PeerReview: Deleting works without any rebalancing 
 bool delete(BSTNode** root, int key) {
     //printf("deleting node\n");
 
@@ -118,6 +119,7 @@ bool delete(BSTNode** root, int key) {
         } 
         // If there is something there, move everything down one step
         else {
+            //PeerReview: How to keep track of ya? 
             //printf("nd -> key = %d\n", nd -> key);
             /**
             // If the balance of nd is non-zero, then when you remove something from nd, it may become unbalanced
@@ -135,6 +137,7 @@ bool delete(BSTNode** root, int key) {
     // Target key found. Curr is at target. Detach node cases
     detach_node(curr, parent_curr, key);
 
+    //PeerReview: How to rebalance after deleting
     /**
     //printf("reached balancing stage\n");
     // Keeps track of balance preemptively?? 
