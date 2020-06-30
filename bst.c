@@ -94,7 +94,7 @@ bool delete(BSTNode** root, int key) {
             return true; 
     }
 
-    print_tree(*root);
+    //print_tree(*root);
     
     //BSTNode* parent_ya = NULL;
     BSTNode* parent_curr = NULL;

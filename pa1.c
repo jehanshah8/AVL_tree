@@ -58,7 +58,8 @@ bool build_tree(const char* in_file_path, const char* out_file_path) {
         }
         //print_tree(root);
     }
-    printf("final output:\n");
+    //printf("final output:\n");
+    // to print tree, go into cleanup_b function (located in helpers.c) and uncomment print_tree(nd)
     return cleanup_b(root, in_file_ptr, out_file_path, 1); 
 }
 
@@ -84,8 +85,8 @@ bool evaluate_tree (const char* in_file_path) {
         return false;
     } 
     fclose(in_file_ptr);
-    print_tree(root); 
-    // Check if the tree created is a BST and if it is balanced.
+    //uncomment to see the tree that was built from file
+    //print_tree(root); 
     
     if (root == NULL) {
         // Empty tree. What to print???????
@@ -93,9 +94,10 @@ bool evaluate_tree (const char* in_file_path) {
         return true; 
     }
 
+    // Check if the tree created is a BST and if it is balanced.
     int output_code = is_bst(root, 10);
     output_code += is_balanced(root, 1);
-
+    destroy_tree(root);
     switch (output_code) {
         case 11: 
             // BST and is balanced 
