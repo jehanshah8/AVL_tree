@@ -1,14 +1,5 @@
 #include "helpers.h"
 
-// Pre-order printing
-void print_tree(BSTNode* nd) {
-    if (nd != NULL) {
-        printf("%d %c %d\n", nd -> key, branch_code(nd), nd -> balance);
-        print_tree(nd -> left); 
-        print_tree(nd -> right); 
-    }
-}
-
 // Pre-order write to file
 void write_tree_to_file(BSTNode* nd, const char* out_file_path) {
     FILE* out_file_ptr = fopen(out_file_path, "wb"); 
@@ -65,7 +56,7 @@ bool recreate_tree(BSTNode** root, FILE* in_file_ptr) {
     //printf("recreating node\n");
     int key;
     char branch_code; 
-    fread(&key, sizeof(key), 1, in_file_ptr); 
+    if (fread(&key, sizeof(key), 1, in_file_ptr) == 1) {; 
         branch_code = fgetc(in_file_ptr);
         //printf("read finished\n");
         //printf("recreating node with key = %d\n", key);
@@ -96,6 +87,7 @@ bool recreate_tree(BSTNode** root, FILE* in_file_ptr) {
                 return false;
         }
         attribute_balance(*root);
+    }
     return true;
 }
 
@@ -115,103 +107,3 @@ void attribute_balance(BSTNode* root) {
     root -> balance = calc_balance(root);
 }
 
-int calc_balance(BSTNode* nd) {
-    if (nd == NULL) {
-        return 0; 
-    }
-
-    return calc_height(nd -> left) - calc_height(nd -> right); 
-}
-
-int calc_height(BSTNode* nd) {
-    if (nd == NULL) {
-        return - 1; 
-    }
-
-    int left_height = 0; 
-    int right_height = 0; 
-    if (nd -> left != NULL) {     
-        left_height = calc_height(nd -> left) + 1; 
-    } 
-
-    if (nd -> right != NULL) {     
-        right_height = calc_height(nd -> right) + 1; 
-    } 
-    
-    if (left_height >= right_height) {
-        //printf("key = %d, left height = %d\n", nd -> key, left_height);
-        return left_height; 
-    } 
-    else
-    {
-        //printf("key = %d, right height = %d\n", nd -> key, right_height);
-        return right_height; 
-    }
-}
-
-int is_bst(BSTNode* nd, int output_code) {
-    if (nd == NULL) {
-        return output_code; 
-    }
-
-    if (output_code == 00) {
-        return output_code; 
-    } 
-    
-    if (nd -> left != NULL) { 
-        if (nd -> key < nd -> left -> key) {
-            // not bst
-            //printf("key = %d, left -> key = %d\n", nd -> key, nd -> left -> key);
-            return 00;
-        }
-        else {
-            output_code = is_bst(nd -> left, output_code);
-        }
-    }
-
-    if (nd -> right != NULL) {
-        if (nd -> key > nd -> right -> key) {
-            // not bst 
-            //printf("key = %d, right -> key = %d\n", nd -> key, nd -> right -> key);
-            return 00;
-        }
-        else {
-            output_code = is_bst(nd -> right, output_code);
-        }
-    }
-    
-    return output_code; 
-}
-
-int is_balanced(BSTNode* nd, int output_code) {
-    if (nd == NULL) {
-        return output_code; 
-    }
-
-    if (output_code == 0) {
-        return output_code; 
-    } 
-    
-    if (nd -> left != NULL) { 
-        if (nd -> balance >= 2 || nd -> balance <= -2) {
-            // Not balanced
-            //printf("key = %d\n", nd -> key);
-            return 0;
-        }
-        else {
-            output_code = is_balanced(nd -> left, output_code);
-        }
-    }
-
-    if (nd -> right != NULL) {
-        if (nd -> balance >= 2 || nd -> balance <= -2) {
-            // Not balanced
-            //printf("key = %d\n", nd -> key);
-            return 0;
-        }
-        else {
-            output_code = is_balanced(nd -> right, output_code);
-        }
-    }
-    return output_code; 
-}
