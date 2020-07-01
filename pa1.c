@@ -49,7 +49,7 @@ bool build_tree(const char* in_file_path, const char* out_file_path) {
                 break; 
                      
             case 'd': 
-                if (!delete(&root, key)) { 
+                if (!delete(&root, NULL, NULL, key)) { 
                   return cleanup_b(root, in_file_ptr, out_file_path, 0); 
                 }
                 break; 
@@ -85,8 +85,8 @@ bool evaluate_tree (const char* in_file_path) {
         return false;
     } 
     fclose(in_file_ptr);
-    //uncomment to see the tree that was built from file
-    //print_tree(root); 
+    //uncomment below to see the tree that was built from file
+    print_tree(root); 
     
     if (root == NULL) {
         //PeerReview:

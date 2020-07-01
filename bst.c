@@ -7,7 +7,7 @@ int _compare(const void* o1, const void* o2) {
 
 // Creates and inserts a new node and rebalances tree as needed
 bool insert(BSTNode** root, int key) {
-    //printf("inserting new node\n");
+    printf("inserting new node\n");
     BSTNode* parent_ya = NULL;
     BSTNode* parent_curr = NULL;  
     BSTNode* youngest_ancestor = *root; 
@@ -71,7 +71,7 @@ bool insert(BSTNode** root, int key) {
     }
 
     //printf("needs balancing\n");
-    make_balanced (root, key, curr, youngest_ancestor, parent_ya);
+    make_balanced_i (root, key, curr, youngest_ancestor, parent_ya);
     return true; 
 }
 
@@ -88,84 +88,120 @@ BSTNode* create_node(int key) {
 }
 
 //PeerReview: Deleting works without any rebalancing 
-bool delete(BSTNode** root, int key) {
-    //printf("deleting node\n");
+bool delete(BSTNode** nd, BSTNode** parent, BSTNode** grandparent, int key) {
+    printf("deleting node\n");
 
-    if (*root == NULL) { 
-            return true; 
+    if (*nd == NULL) { 
+        return true; 
     }
 
-    //print_tree(*root);
-    
-    //BSTNode* parent_ya = NULL;
-    BSTNode* parent_curr = NULL;
-    //BSTNode* youngest_ancestor = *root;   
-    BSTNode* curr = *root; 
-    BSTNode* nd = NULL;
-    
-    while (curr -> key != key) { 
-        
-        if (key <= curr -> key) { //less than or equal to so that duplicates always go left 
-            nd = curr -> left; //point left
-        }  
-        else { 
-            nd = curr -> right; //point right
-        }
+    BSTNode* new_child = NULL; 
 
-        // key not found
-        if (nd == NULL) { 
-            //printf("key not found\n");
-            return true; 
-        } 
-        // If there is something there, move everything down one step
-        else {
-            //PeerReview: How to keep track of ya? 
-            //printf("nd -> key = %d\n", nd -> key);
-            /**
-            // If the balance of nd is non-zero, then when you remove something from nd, it may become unbalanced
-            if (nd -> balance != 0) {
-                parent_ya = curr; 
-                youngest_ancestor = nd;  
-            }
-            */
-            parent_curr = curr; 
-            curr = nd;  
-        }
-    } // while curr isn't at the target key or nd is not NULL
-
-    //printf("key = %d found\n", key);
-    // Target key found. Curr is at target. Detach node cases
-    detach_node(curr, parent_curr, key);
-
-    //PeerReview: How to rebalance after deleting
-    /**
-    //printf("reached balancing stage\n");
-    // Keeps track of balance preemptively?? 
-    if (youngest_ancestor == NULL) { 
-        return true; 
+    if ((*nd) -> key == key) {
+        detach_node(*nd, *parent, key);
     } 
-
-    curr = youngest_ancestor;
-    while (curr ->) { 
-        if (key <= curr -> key) { 
-            curr -> balance += 1; 
-            curr = curr -> left;   
+    else if (key < (*nd) -> key) { //less than or equal to so that duplicates always go left 
+        delete(&((*nd) -> left), nd, parent, key); 
+    }  
+    else { 
+        delete(&((*nd) -> right), nd, parent, key);
+    }
+    
+    if (parent != NULL && *parent != NULL) {
+        if (key <= (*parent) -> key) { 
+            new_child = (*parent) -> left;
         }
         else {
-            curr -> balance -= 1; 
-            curr = curr -> right; 
+            new_child = (*parent) -> right;
+        }
+        
+        (*parent) -> balance = calc_balance(*parent);
+        if ((*parent) -> balance >= 2 || (*parent) -> balance <= -2) {
+            printf("FUCK YOU! SEG FAULT!!!!!\n");
+            printf("needs rebalancing\n");
+            make_balanced_d (grandparent, parent, &new_child);
         }
     }
-    //printf("evaluating if balacing is required\n");
-    // If it's already balanced, return
-    if (youngest_ancestor -> balance < 2 && youngest_ancestor -> balance > -2) { 
-        return true; 
+    return true; 
+}
+
+void make_balanced_d(BSTNode** grandparent, BSTNode** child, BSTNode** parent) {
+    // The subtree rooted at the youngest ancestor needs balancing 
+    // curr points to the new root of the subtree
+    // parent_ya has to point to curr after rebalancing
+
+    // If both the youngest ancestor and the child are unbalanced in the SAME direction
+    BSTNode* temp; 
+    // Left heavy => rotate right
+    if ((*parent) -> balance == 2 && (*child) -> balance == 1) { 
+        temp = *child;
+        right_rotate(parent); 
+        (*parent) -> balance = 0; 
+        (*child) -> balance = 0; 
     }
 
-    //printf("needs balancing\n");
-    make_balanced (root, key, curr, youngest_ancestor, parent_ya);
-    */
-    return true; 
+    // Right heavy => rotate left
+    if ((*parent) -> balance == -2 && (*child) -> balance == -1) {
+        temp = *child;
+        left_rotate(parent); 
+        (*parent) -> balance = 0; 
+        (*child) -> balance = 0; 
+    }
+
+    // If both the youngest ancestor and the child are unbalanced in OPPOSITE directions
+
+    // Left rotate then, right rotate
+    if ((*parent) -> balance == 2 && (*child) -> balance == -1) {
+        temp = (*child) -> right; 
+        left_rotate(child); 
+        (*parent) -> left = temp; 
+        right_rotate(parent);
+        if (temp -> balance == 0) {
+            (*parent) -> balance = 0; 
+            (*child) -> balance = 0;
+        }
+        else {
+            if (temp -> balance == 1) {
+                (*parent) -> balance = -1; 
+                (*child) -> balance = 0;
+            }
+            else {
+                (*parent) -> balance = 0; 
+                (*child) -> balance = 1; 
+            }
+            temp -> balance = 0; 
+        }
+    }
+
+    // Right rotate then, left rotate
+     if ((*parent) -> balance == -2 && (*child) -> balance == 1) {
+        temp = (*child) -> left; 
+        right_rotate(child); 
+        (*parent) -> right = temp; 
+        left_rotate(parent);
+        if (temp -> balance == 0) {
+            (*parent) -> balance = 0; 
+            (*child) -> balance = 0;
+        }
+        else {
+            if (temp -> balance == -1) {
+                (*parent) -> balance = 1; 
+                (*child) -> balance = 0;
+            }
+            else {
+                (*parent) -> balance = 0; 
+                (*child) -> balance = -1; 
+            }
+            temp -> balance = 0; 
+        }
+    }
+
+    if (temp -> key <= (*grandparent) -> key) {
+        (*grandparent) -> left = temp; 
+    }
+    else {
+        (*grandparent) -> right = temp; 
+    }
 }
 
 void detach_node(BSTNode* curr, BSTNode* parent_curr, int key) {
@@ -230,7 +266,7 @@ void copy(BSTNode* target, BSTNode* source) {
     target -> key = source -> key; 
 }
 
-void make_balanced (BSTNode** root, int key, BSTNode* curr, BSTNode* youngest_ancestor, BSTNode* parent_ya) {
+void make_balanced_i (BSTNode** root, int key, BSTNode* curr, BSTNode* youngest_ancestor, BSTNode* parent_ya) {
     BSTNode* child; // which child nd is inserted into
     // Make child point to the tallest child of ya, which was made talled by adding node
     if (key <= youngest_ancestor -> key) {
@@ -459,7 +495,7 @@ int is_balanced(BSTNode* nd, int output_code) {
 // Pre-order printing
 void print_tree(BSTNode* nd) {
     if (nd != NULL) {
-        printf("%d %c %d\n", nd -> key, branch_code(nd), nd -> balance);
+        printf("%d %d %d\n", nd -> key, branch_code(nd), nd -> balance);
         print_tree(nd -> left); 
         print_tree(nd -> right); 
     }

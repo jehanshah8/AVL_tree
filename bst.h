@@ -16,10 +16,11 @@ typedef struct bstnode {
 
 BSTNode* create_node(int key); 
 bool insert(BSTNode** root, int key); 
-bool delete(BSTNode** root, int key); 
+bool delete(BSTNode** nd, BSTNode** parent, BSTNode** grandparent, int key);
 void detach_node(BSTNode* curr, BSTNode* parent_curr, int key);
 void copy(BSTNode* target, BSTNode* source);
-void make_balanced (BSTNode** root, int key, BSTNode* curr, BSTNode* youngest_ancestor, BSTNode* parent_ya);
+void make_balanced_i(BSTNode** root, int key, BSTNode* curr, BSTNode* youngest_ancestor, BSTNode* parent_ya);
+void make_balanced_d(BSTNode** grandparent, BSTNode** child, BSTNode** parent);
 void right_rotate(BSTNode** nd); 
 void left_rotate(BSTNode** nd);
 void attribute_balance(BSTNode* root); 

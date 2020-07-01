@@ -23,7 +23,7 @@ void _write_tree(BSTNode* nd, FILE* out_file_ptr) {
 }
 
 bool cleanup_b (BSTNode* nd, FILE* in_file_ptr, const char* out_file_path, int print_code) {  
-    //print_tree(nd); 
+    print_tree(nd); 
     write_tree_to_file(nd, out_file_path);
     destroy_tree(nd);
     fclose(in_file_ptr); 
