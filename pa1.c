@@ -47,8 +47,8 @@ bool build_tree(const char* in_file_path, const char* out_file_path) {
         switch (operation) {
             case 'i':
                 //printf("inserting...\n");
-                root = insert(root, key); 
-                if (root == NULL) { // if insertion failed 
+                //root = insert(root, key); 
+                if (!insert(&root, key)) { // if insertion failed 
                    return cleanup_b(root, in_file_ptr, out_file_path, 0); 
                 }
                 break; 

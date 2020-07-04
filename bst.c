@@ -15,56 +15,60 @@ BSTNode *create_node(int key)
     return nd;
 }
 
-BSTNode *insert(BSTNode *root, int key)
+bool insert(BSTNode **root, int key)
 {
-    if (root == NULL)
+    if (*root == NULL)
     {
-        return create_node(key);
+        *root = create_node(key);
+        return true;
     }
 
-    if (key <= root->key)
+    if (key <= (*root)->key)
     { //less than or equal to so that duplicates always go left
-        root->left = insert(root->left, key);
+        insert(&((*root)->left), key);
     }
     else
     {
-        root->right = insert(root->right, key);
+        insert(&((*root)->right), key);
     }
 
-    set_height(&root);
-
-    int balance = get_balance(root);
+    set_height(root);
+    int balance = get_balance(*root);
 
     //tallest child is left child
-    if (balance > 1 && key <= root->left->key)
+    if (balance > 1 && key <= (*root)->left->key)
     {
         //printf("right\n");
-        return right_rotate(root);
+        *root = right_rotate(*root);
+        return true;
     }
 
     //tallest child is right child
-    if (balance < -1 && key > root->right->key)
+    if (balance < -1 && key > (*root)->right->key)
     {
         //printf("left\n");
-        return left_rotate(root);
+        *root = left_rotate(*root);
+        return true;
     }
 
     //balance in opp direction
-    if (balance > 1 && key > root->left->key)
+    if (balance > 1 && key > (*root)->left->key)
     {
         //printf("left, then right\n");
-        root->left = left_rotate(root->left);
-        return right_rotate(root);
+        (*root)->left = left_rotate((*root)->left);
+        *root = right_rotate(*root);
+        return true;
     }
     //balance in opp direction
-    if (balance < -1 && key <= root->right->key)
+    if (balance < -1 && key <= (*root)->right->key)
     {
         //printf("right, then left\n");
-        root->right = right_rotate(root->right);
-        return left_rotate(root);
+        (*root)->right = right_rotate((*root)->right);
+        *root = left_rotate(*root);
+        return true;
     }
 
-    return root;
+    return true;
 }
 
 bool delete (BSTNode **root, BSTNode **parent, int key)

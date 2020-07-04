@@ -15,7 +15,7 @@ typedef struct bstnode {
 
 
 BSTNode* create_node(int key); 
-BSTNode* insert(BSTNode* root, int key);
+bool insert(BSTNode** root, int key);
 void detach_node(BSTNode **root, BSTNode** parent, int key);
 bool delete(BSTNode** root, BSTNode** parent, int key);
 BSTNode* right_rotate(BSTNode* root); 
