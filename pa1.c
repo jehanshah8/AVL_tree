@@ -34,24 +34,30 @@ bool build_tree(const char* in_file_path, const char* out_file_path) {
         return false; 
     }
 
+    int count = 0;
     int key; 
     char operation; 
     BSTNode* root = NULL;
+    BSTNode* parent = NULL; 
 
     while (fread(&key, sizeof(key), 1, in_file_ptr) == 1) {
         operation = fgetc(in_file_ptr); 
-        //printf("key = %d\noperation = %c\n", key, operation);
+        count++; 
+        //printf("%d.)key = %d\toperation = %c\n", count, key, operation);
         switch (operation) {
-            case 'i': 
-                if (!insert(&root, key)) { 
+            case 'i':
+                //printf("inserting...\n");
+                root = insert(root, key); 
+                if (root == NULL) { // if insertion failed 
                    return cleanup_b(root, in_file_ptr, out_file_path, 0); 
                 }
                 break; 
                      
             case 'd': 
-                if (!delete(&root, NULL, NULL, key)) { 
-                  return cleanup_b(root, in_file_ptr, out_file_path, 0); 
-                }
+                //printf("deleting...\n"); 
+                if (!delete(&root, &parent, key)) {
+                    return cleanup_b(root, in_file_ptr, out_file_path, 0);
+                };
                 break; 
             default:
                 return cleanup_b(root, in_file_ptr, out_file_path, 0); 
@@ -86,7 +92,7 @@ bool evaluate_tree (const char* in_file_path) {
     } 
     fclose(in_file_ptr);
     //uncomment below to see the tree that was built from file
-    print_tree(root); 
+    //print_tree(root); 
     
     if (root == NULL) {
         //PeerReview:

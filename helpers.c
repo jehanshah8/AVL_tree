@@ -1,4 +1,5 @@
 #include "helpers.h"
+#include "bst.h"
 
 // Pre-order write to file
 void write_tree_to_file(BSTNode* nd, const char* out_file_path) {
@@ -23,7 +24,8 @@ void _write_tree(BSTNode* nd, FILE* out_file_ptr) {
 }
 
 bool cleanup_b (BSTNode* nd, FILE* in_file_ptr, const char* out_file_path, int print_code) {  
-    print_tree(nd); 
+    //printf("final output:\n");
+    //print_tree(nd); 
     write_tree_to_file(nd, out_file_path);
     destroy_tree(nd);
     fclose(in_file_ptr); 
@@ -86,7 +88,8 @@ bool recreate_tree(BSTNode** root, FILE* in_file_ptr) {
                 // incorrect format
                 return false;
         }
-        attribute_balance(*root);
+        //attribute_balance(*root);
+        set_height(root);
     }
     return true;
 }
