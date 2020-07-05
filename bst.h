@@ -10,21 +10,20 @@ typedef struct bstnode {
     int key; 
     struct bstnode* left; 
     struct bstnode* right;
-    int balance;
+    int height;
 } BSTNode; 
 
 
 BSTNode* create_node(int key); 
-bool insert(BSTNode** root, int key); 
-bool delete(BSTNode** root, int key); 
-void detach_node(BSTNode* curr, BSTNode* parent_curr, int key);
-void copy(BSTNode* target, BSTNode* source);
-void make_balanced (BSTNode** root, int key, BSTNode* curr, BSTNode* youngest_ancestor, BSTNode* parent_ya);
-void right_rotate(BSTNode** nd); 
-void left_rotate(BSTNode** nd);
-void attribute_balance(BSTNode* root); 
-int calc_balance(BSTNode* nd); 
-int calc_height(BSTNode* nd); 
+bool insert(BSTNode** root, int key);
+void detach_node(BSTNode **root, BSTNode** parent, int key);
+bool delete(BSTNode** root, BSTNode** parent, int key);
+BSTNode* right_rotate(BSTNode* root); 
+BSTNode* left_rotate(BSTNode* root);
+int max(int n1, int n2);
+int get_height(BSTNode* nd);
+void set_height(BSTNode** nd); 
+int get_balance(BSTNode* nd); 
 int is_bst(BSTNode* nd, int output_code);
 int is_balanced(BSTNode* nd, int output_code);
 void print_tree(BSTNode* nd); 
